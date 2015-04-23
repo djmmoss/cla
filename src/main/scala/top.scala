@@ -7,6 +7,8 @@ object Top {
     def main(args: Array[String]): Unit = {
         val bitWidth = 8
         val vecLength = 10
+        val rowLength = 5
+        val colLength = 5
         val theArgs = args.slice(1, args.length)
         args(0) match {
             case "Add" =>
@@ -54,6 +56,16 @@ object Top {
                     c => new VectorDivTests(c)}
                 chiselMainTest(theArgs, () => Module(new VectorDiv(vecLength, bitWidth, false))) {
                     c => new VectorDivTests(c)}
+            case "MatrixAdd" =>
+                chiselMainTest(theArgs, () => Module(new MatrixAdd(rowLength, colLength, bitWidth, true))) {
+                    c => new MatrixAddTests(c)}
+                chiselMainTest(theArgs, () => Module(new MatrixAdd(rowLength, colLength, bitWidth, false))) {
+                    c => new MatrixAddTests(c)}
+            case "MatrixSub" =>
+                chiselMainTest(theArgs, () => Module(new MatrixSub(rowLength, colLength, bitWidth, true))) {
+                    c => new MatrixSubTests(c)}
+                chiselMainTest(theArgs, () => Module(new MatrixSub(rowLength, colLength, bitWidth, false))) {
+                    c => new MatrixSubTests(c)}
         }
     }
 }

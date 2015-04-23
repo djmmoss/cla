@@ -21,7 +21,7 @@ class VectorDivTests(c: VectorDiv) extends Tester(c) {
 
     for (i <- 0 to 10) {
         val inA = Array.fill(c.vecLength){r.nextInt(scala.math.pow(2, c.bitWidth/2).toInt)}
-        val inB = Array.fill(c.vecLength){r.nextInt(scala.math.pow(2, c.bitWidth/2).toInt)}
+        val inB = Array.fill(c.vecLength){r.nextInt(scala.math.pow(2, c.bitWidth/2).toInt) + 1}
         for (i <- 0 until c.vecLength) {
             poke(c.io.a(i), inA(i))
             poke(c.io.b(i), inB(i))

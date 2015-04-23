@@ -6,6 +6,7 @@ import Chisel._
 object Top {
     def main(args: Array[String]): Unit = {
         val bitWidth = 8
+        val vecLength = 10
         val theArgs = args.slice(1, args.length)
         args(0) match {
             case "Add" =>
@@ -23,6 +24,36 @@ object Top {
                     c => new SubTests(c, bitWidth, true)}
                 chiselMainTest(theArgs, () => Module(new Sub(bitWidth, false))) {
                     c => new SubTests(c, bitWidth, false)}
+            case "Mul" =>
+                chiselMainTest(theArgs, () => Module(new Mul(bitWidth, true))) {
+                    c => new MulTests(c, bitWidth, true)}
+                chiselMainTest(theArgs, () => Module(new Mul(bitWidth, false))) {
+                    c => new MulTests(c, bitWidth, false)}
+            case "Div" =>
+                chiselMainTest(theArgs, () => Module(new Div(bitWidth, true))) {
+                    c => new DivTests(c, bitWidth, true)}
+                chiselMainTest(theArgs, () => Module(new Div(bitWidth, false))) {
+                    c => new DivTests(c, bitWidth, false)}
+            case "VectorAdd" =>
+                chiselMainTest(theArgs, () => Module(new VectorAdd(vecLength, bitWidth, true))) {
+                    c => new VectorAddTests(c)}
+                chiselMainTest(theArgs, () => Module(new VectorAdd(vecLength, bitWidth, false))) {
+                    c => new VectorAddTests(c)}
+            case "VectorSub" =>
+                chiselMainTest(theArgs, () => Module(new VectorSub(vecLength, bitWidth, true))) {
+                    c => new VectorSubTests(c)}
+                chiselMainTest(theArgs, () => Module(new VectorSub(vecLength, bitWidth, false))) {
+                    c => new VectorSubTests(c)}
+            case "VectorMul" =>
+                chiselMainTest(theArgs, () => Module(new VectorMul(vecLength, bitWidth, true))) {
+                    c => new VectorMulTests(c)}
+                chiselMainTest(theArgs, () => Module(new VectorMul(vecLength, bitWidth, false))) {
+                    c => new VectorMulTests(c)}
+            case "VectorDiv" =>
+                chiselMainTest(theArgs, () => Module(new VectorDiv(vecLength, bitWidth, true))) {
+                    c => new VectorDivTests(c)}
+                chiselMainTest(theArgs, () => Module(new VectorDiv(vecLength, bitWidth, false))) {
+                    c => new VectorDivTests(c)}
         }
     }
 }

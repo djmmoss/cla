@@ -66,6 +66,11 @@ object Top {
                     c => new MatrixSubTests(c)}
                 chiselMainTest(theArgs, () => Module(new MatrixSub(rowLength, colLength, bitWidth, false))) {
                     c => new MatrixSubTests(c)}
+            case "VectorDot" =>
+                chiselMainTest(theArgs, () => Module(new VectorDot(vecLength, bitWidth, true))) {
+                    c => new VectorDotTests(c)}
+                chiselMainTest(theArgs, () => Module(new VectorDot(vecLength, bitWidth, false))) {
+                    c => new VectorDotTests(c)}
         }
     }
 }

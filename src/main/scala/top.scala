@@ -6,11 +6,13 @@ import Chisel._
 object Top {
     def main(args: Array[String]): Unit = {
         val bitWidth = 8
-        val vecLength = 10
+        val vecLength = 4
         val rowLength = 5
         val colLength = 5
         val theArgs = args.slice(1, args.length)
         args(0) match {
+
+            // Scale Operations
             case "Add" =>
                 chiselMainTest(theArgs, () => Module(new Add(bitWidth, true))) {
                     c => new AddTests(c, bitWidth, true)}
@@ -36,6 +38,8 @@ object Top {
                     c => new DivTests(c, bitWidth, true)}
                 chiselMainTest(theArgs, () => Module(new Div(bitWidth, false))) {
                     c => new DivTests(c, bitWidth, false)}
+
+            // Vector Operations
             case "VectorAdd" =>
                 chiselMainTest(theArgs, () => Module(new VectorAdd(vecLength, bitWidth, true))) {
                     c => new VectorAddTests(c)}
@@ -56,6 +60,28 @@ object Top {
                     c => new VectorDivTests(c)}
                 chiselMainTest(theArgs, () => Module(new VectorDiv(vecLength, bitWidth, false))) {
                     c => new VectorDivTests(c)}
+            case "VectorDot" =>
+                chiselMainTest(theArgs, () => Module(new VectorDot(vecLength, bitWidth, true))) {
+                    c => new VectorDotTests(c)}
+                chiselMainTest(theArgs, () => Module(new VectorDot(vecLength, bitWidth, false))) {
+                    c => new VectorDotTests(c)}
+            case "VectorScalarMul" =>
+                chiselMainTest(theArgs, () => Module(new VectorScalarMul(vecLength, bitWidth, true))) {
+                    c => new VectorScalarMulTests(c)}
+                chiselMainTest(theArgs, () => Module(new VectorScalarMul(vecLength, bitWidth, false))) {
+                    c => new VectorScalarMulTests(c)}
+            case "VectorScalarDiv" =>
+                chiselMainTest(theArgs, () => Module(new VectorScalarDiv(vecLength, bitWidth, true))) {
+                    c => new VectorScalarDivTests(c)}
+                chiselMainTest(theArgs, () => Module(new VectorScalarDiv(vecLength, bitWidth, false))) {
+                    c => new VectorScalarDivTests(c)}
+            case "VectorPipe" =>
+                chiselMainTest(theArgs, () => Module(new VectorPipe(vecLength, bitWidth, true))) {
+                    c => new VectorPipeTests(c)}
+                chiselMainTest(theArgs, () => Module(new VectorPipe(vecLength, bitWidth, false))) {
+                    c => new VectorPipeTests(c)}
+            
+            // Matrix Operations
             case "MatrixAdd" =>
                 chiselMainTest(theArgs, () => Module(new MatrixAdd(rowLength, colLength, bitWidth, true))) {
                     c => new MatrixAddTests(c)}
@@ -66,16 +92,31 @@ object Top {
                     c => new MatrixSubTests(c)}
                 chiselMainTest(theArgs, () => Module(new MatrixSub(rowLength, colLength, bitWidth, false))) {
                     c => new MatrixSubTests(c)}
-            case "VectorDot" =>
-                chiselMainTest(theArgs, () => Module(new VectorDot(vecLength, bitWidth, true))) {
-                    c => new VectorDotTests(c)}
-                chiselMainTest(theArgs, () => Module(new VectorDot(vecLength, bitWidth, false))) {
-                    c => new VectorDotTests(c)}
-            case "VectorPipe" =>
-                chiselMainTest(theArgs, () => Module(new VectorPipe(vecLength, bitWidth, true))) {
-                    c => new VectorPipeTests(c)}
-                chiselMainTest(theArgs, () => Module(new VectorPipe(vecLength, bitWidth, false))) {
-                    c => new VectorPipeTests(c)}
+            case "MatrixMul" =>
+                chiselMainTest(theArgs, () => Module(new MatrixMul(rowLength, colLength, bitWidth, true))) {
+                    c => new MatrixMulTests(c)}
+                chiselMainTest(theArgs, () => Module(new MatrixMul(rowLength, colLength, bitWidth, false))) {
+                    c => new MatrixMulTests(c)}
+            case "MatrixDiv" =>
+                chiselMainTest(theArgs, () => Module(new MatrixDiv(rowLength, colLength, bitWidth, true))) {
+                    c => new MatrixDivTests(c)}
+                chiselMainTest(theArgs, () => Module(new MatrixDiv(rowLength, colLength, bitWidth, false))) {
+                    c => new MatrixDivTests(c)}
+            case "MatrixScalarMul" =>
+                chiselMainTest(theArgs, () => Module(new MatrixScalarMul(rowLength, colLength, bitWidth, true))) {
+                    c => new MatrixScalarMulTests(c)}
+                chiselMainTest(theArgs, () => Module(new MatrixScalarMul(rowLength, colLength, bitWidth, false))) {
+                    c => new MatrixScalarMulTests(c)}
+            case "MatrixScalarDiv" =>
+                chiselMainTest(theArgs, () => Module(new MatrixScalarDiv(rowLength, colLength, bitWidth, true))) {
+                    c => new MatrixScalarDivTests(c)}
+                chiselMainTest(theArgs, () => Module(new MatrixScalarDiv(rowLength, colLength, bitWidth, false))) {
+                    c => new MatrixScalarDivTests(c)}
+            case "MatrixPipe" =>
+                chiselMainTest(theArgs, () => Module(new MatrixPipe(rowLength, colLength, bitWidth, true))) {
+                    c => new MatrixPipeTests(c)}
+                chiselMainTest(theArgs, () => Module(new MatrixPipe(rowLength, colLength, bitWidth, false))) {
+                    c => new MatrixPipeTests(c)}
         }
     }
 }

@@ -1,4 +1,4 @@
-organization := "edu.berkeley.cs"
+organization := "usyd.edu.au"
 
 version := "2.3-SNAPSHOT"
 

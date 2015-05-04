@@ -6,9 +6,9 @@ import Chisel._
 object Top {
     def main(args: Array[String]): Unit = {
         val bitWidth = 8
-        val vecLength = 4
-        val rowLength = 5
-        val colLength = 5
+        val vecLength = 2
+        val rowLength = 2
+        val colLength = 2
         val theArgs = args.slice(1, args.length)
         args(0) match {
 
@@ -112,6 +112,11 @@ object Top {
                     c => new MatrixScalarDivTests(c)}
                 chiselMainTest(theArgs, () => Module(new MatrixScalarDiv(rowLength, colLength, bitWidth, false))) {
                     c => new MatrixScalarDivTests(c)}
+            case "MatrixVectorMul" =>
+                chiselMainTest(theArgs, () => Module(new MatrixVectorMul(rowLength, colLength, bitWidth, true))) {
+                    c => new MatrixVectorMulTests(c)}
+                chiselMainTest(theArgs, () => Module(new MatrixVectorMul(rowLength, colLength, bitWidth, false))) {
+                    c => new MatrixVectorMulTests(c)}
             case "MatrixPipe" =>
                 chiselMainTest(theArgs, () => Module(new MatrixPipe(rowLength, colLength, bitWidth, true))) {
                     c => new MatrixPipeTests(c)}

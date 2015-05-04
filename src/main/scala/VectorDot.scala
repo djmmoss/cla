@@ -1,6 +1,8 @@
 package cla
 
 import Chisel._
+import breeze.linalg._
+import breeze.numerics._
 
 class VectorDot(val vecLength : Int, val bitWidth : Int, val hasStage : Boolean) extends Module {
     val lnOf2 = scala.math.log(2) // natural log of 2
@@ -78,12 +80,9 @@ class VectorDotTests(c: VectorDot) extends Tester(c) {
 
     for (i <- 0 to 10) {
         // Generate Inputs and Outputs
-        val inA = Array.fill(c.vecLength){r.nextInt(scala.math.pow(2, c.bitWidth/2).toInt)}
-        val inB = Array.fill(c.vecLength){r.nextInt(scala.math.pow(2, c.bitWidth/2).toInt)}
-        var outRes = 0;
-        for (i <- 0 until c.vecLength) {
-            outRes += (inA(i) * inB(i))
-        }
+        val inA = DenseVector.fill(c.vecLength){r.nextInt(scala.math.pow(2, c.bitWidth/2).toInt)}
+        val inB = DenseVector.fill(c.vecLength){r.nextInt(scala.math.pow(2, c.bitWidth/2).toInt)}
+        var outRes = inA dot inB;
 
         // Test Module
         for (i <- 0 until c.vecLength) {

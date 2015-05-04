@@ -13,36 +13,56 @@ class VectorDot(val vecLength : Int, val bitWidth : Int, val hasStage : Boolean)
     }
     // Use VectorMul for the Initial Multiplication
     val vecMul = Module(new VectorMul(vecLength, bitWidth, hasStage)).io
-    var prevRes = Vec.fill(vecLength){UInt(0, bitWidth)}
+    var mulRes = Vec.fill(vecLength){UInt(0, bitWidth)}
     vecMul.a := io.a
     vecMul.b := io.b
-    prevRes := vecMul.res
+    mulRes := vecMul.res
 
+    var inA = Vec.fill(vecLength){UInt(0, bitWidth)}
+    var inB = Vec.fill(vecLength){UInt(0, bitWidth)}
+  
+    for (i <- 0 until (vecLength/2).toInt) {
+    inA(i) := mulRes(i*2)
+    inB(i) := mulRes(i*2 + 1)
+  }
+  for (i <- (vecLength/2).toInt until vecLength) {
+    inA(i) := UInt(0, bitWidth)
+    inB(i) := UInt(0, bitWidth)
+  }
 
-    var currentLength = vecLength
-    var vecAdd = Module(new VectorAdd(currentLength, bitWidth, hasStage)).io
-    var addA = Vec.fill(currentLength){UInt(0, bitWidth)}
-    var addB = Vec.fill(currentLength){UInt(0, bitWidth)}
-    var currRes = Vec.fill(currentLength){UInt(0, bitWidth)}
-    // Now We create the Adder Tree
-    // The Adder Tree Depth is log2(vecLength)
-    for (i <- 0 until (log2(vecLength).toInt)) {
-        // At each level we want to perform a vector addition the elements of the previous addition
-        vecAdd = Module(new VectorAdd(currentLength, bitWidth, hasStage)).io
-        addA = Vec.fill(currentLength){UInt(0, bitWidth)}
-        addB = Vec.fill(currentLength){UInt(0, bitWidth)}
-        for (i <- 0 until (currentLength/2)) {
-            addA := prevRes(i*2)
-            addB := prevRes(i*2 + 1)
-        }
-        val currRes = Vec.fill(currentLength){UInt(0, bitWidth)}
-        vecAdd.a := addA
-        vecAdd.b := addB
-        currRes := vecAdd.res
-        currentLength = currentLength/2
-        prevRes = currRes
-    }
-    io.res := currRes(0)
+  val adderTree = Vec.fill(log2(vecLength).toInt - 1){Module(new AdderTree(vecLength, bitWidth, hasStage)).io}
+  adderTree(0).a := inA
+  adderTree(0).b := inB
+
+  for (i <- 1 until (log2(vecLength).toInt - 1)) {
+    adderTree(i).a := adderTree(i-1).res1
+    adderTree(i).b := adderTree(i-1).res2
+  }
+  io.res := adderTree(log2(vecLength).toInt - 1).res1(0) + adderTree(log2(vecLength).toInt - 1).res2(0)
+}
+
+class AdderTree(val vecLength : Int, val bitWidth : Int, val hasStage : Boolean) extends Module {
+  val io = new Bundle {
+    val a = Vec.fill(vecLength){UInt(INPUT, bitWidth)}
+    val b = Vec.fill(vecLength){UInt(INPUT, bitWidth)}
+    val res1 = Vec.fill(vecLength){UInt(OUTPUT, bitWidth)}
+    val res2 = Vec.fill(vecLength){UInt(OUTPUT, bitWidth)}
+  }
+  val vecAdd = Module(new VectorAdd(vecLength, bitWidth, hasStage)).io
+  val vecRes = Vec.fill(vecLength){UInt(0, bitWidth)}
+
+  vecAdd.a := io.a
+  vecAdd.b := io.b
+  vecRes := vecAdd.res
+
+  for (i <- 0 until (vecLength/2).toInt) {
+    io.res1(i) := vecRes(i*2)
+    io.res2(i) := vecRes(i*2 + 1)
+  }
+  for (i <- (vecLength/2).toInt until vecLength) {
+    io.res1(i) := UInt(0, bitWidth)
+    io.res2(i) := UInt(0, bitWidth)
+  }
 }
 
 class VectorDotTests(c: VectorDot) extends Tester(c) {

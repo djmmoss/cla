@@ -71,6 +71,11 @@ object Top {
                     c => new VectorDotTests(c)}
                 chiselMainTest(theArgs, () => Module(new VectorDot(vecLength, bitWidth, false))) {
                     c => new VectorDotTests(c)}
+            case "VectorPipe" =>
+                chiselMainTest(theArgs, () => Module(new VectorPipe(vecLength, bitWidth, true))) {
+                    c => new VectorPipeTests(c)}
+                chiselMainTest(theArgs, () => Module(new VectorPipe(vecLength, bitWidth, false))) {
+                    c => new VectorPipeTests(c)}
         }
     }
 }

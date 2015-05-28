@@ -1,6 +1,7 @@
 package cla.primitives
 
 import cla.utils._
+import cla.types._
 import Chisel._
 
 class Add(bitWidth : Int, hasStage : Boolean) extends Module {

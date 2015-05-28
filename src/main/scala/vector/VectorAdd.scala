@@ -1,22 +1,23 @@
-package cla
+package cla.vector
 
+import cla.primitives._
 import Chisel._
 
-class VectorSub(val vecLength : Int, val bitWidth : Int, val hasStage : Boolean) extends Module {
+class VectorAdd(val vecLength : Int, val bitWidth : Int, val hasStage : Boolean) extends Module {
     val io = new Bundle {
         val a = Vec.fill(vecLength){UInt(INPUT, bitWidth)}
         val b = Vec.fill(vecLength){UInt(INPUT, bitWidth)}
         val res = Vec.fill(vecLength){UInt(OUTPUT, bitWidth)}
     }
-    val VecSubs = Vec.fill(vecLength){Module(new Sub(bitWidth, hasStage)).io}
+    val VecAdds = Vec.fill(vecLength){Module(new Add(bitWidth, hasStage)).io}
     for (i <- 0 until vecLength) {
-        VecSubs(i).a := io.a(i)
-        VecSubs(i).b := io.b(i)
-        io.res(i) := VecSubs(i).res
+        VecAdds(i).a := io.a(i)
+        VecAdds(i).b := io.b(i)
+        io.res(i) := VecAdds(i).res
     }
 }
 
-class VectorSubTests(c: VectorSub) extends Tester(c) {
+class VectorAddTests(c: VectorAdd) extends Tester(c) {
     val r = scala.util.Random
 
     for (i <- 0 to 10) {
@@ -29,7 +30,7 @@ class VectorSubTests(c: VectorSub) extends Tester(c) {
         if (c.hasStage)
             step(1)
         for (i <- 0 until c.vecLength) {
-            expect(c.io.res(i), inA(i) - inB(i))
+            expect(c.io.res(i), inA(i) + inB(i))
         }
     }
 }

@@ -1,4 +1,6 @@
-package cla
+package cla.matrix
+
+import cla.vector._
 
 import Chisel._
 

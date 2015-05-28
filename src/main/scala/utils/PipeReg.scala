@@ -1,4 +1,4 @@
-package cla
+package cla.utils
 
 import Chisel._
 

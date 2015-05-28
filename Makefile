@@ -17,7 +17,7 @@ endif
 CHISEL_FLAGS :=
 
 top_srcdir ?= .
-srcdir ?= src/main/scala/
+srcdir ?= src/main/scala/*
 executables := $(filter-out top, $(notdir $(basename $(wildcard $(srcdir)/*.scala))))
 outs := $(addsuffix .out, $(executables))
 

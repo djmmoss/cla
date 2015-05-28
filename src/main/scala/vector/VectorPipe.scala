@@ -1,5 +1,6 @@
-package cla
+package cla.vector
 
+import cla.utils._
 import Chisel._
 
 class VectorPipe(val vecLength : Int, val bitWidth : Int, val hasStage : Boolean) extends Module {

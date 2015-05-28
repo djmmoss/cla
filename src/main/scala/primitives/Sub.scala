@@ -1,8 +1,9 @@
-package cla
+package cla.primitives
 
+import cla.utils._
 import Chisel._
 
-class Mul(bitWidth : Int, hasStage : Boolean) extends Module {
+class Sub(bitWidth : Int, hasStage : Boolean) extends Module {
     val io = new Bundle {
         val a = UInt(INPUT, bitWidth)
         val b = UInt(INPUT, bitWidth)
@@ -10,20 +11,20 @@ class Mul(bitWidth : Int, hasStage : Boolean) extends Module {
     }
     if (hasStage) {
         val pipeReg = Module(new PipeReg(bitWidth, hasStage))
-        pipeReg.io.in := io.a * io.b
+        pipeReg.io.in := io.a - io.b
         io.res := pipeReg.io.out
     } else {
-        io.res := io.a * io.b
+        io.res := io.a - io.b
     }
 }
 
-class MulTests(c: Mul, bitWidth : Int,  hasStage : Boolean) extends Tester(c) {
+class SubTests(c: Sub, bitWidth : Int, hasStage : Boolean) extends Tester(c) {
     val r = scala.util.Random
 
     for (i <- 0 to 10) {
-        val inA = r.nextInt(scala.math.pow(2, bitWidth/2).toInt)
-        val inB = r.nextInt(scala.math.pow(2, bitWidth/2).toInt)
-        val outRes = inA * inB
+        val inA = r.nextInt(scala.math.pow(2, bitWidth).toInt)
+        val inB = r.nextInt(scala.math.pow(2, bitWidth).toInt)
+        val outRes = inA - inB
         poke(c.io.a, inA)
         poke(c.io.b, inB)
         if (hasStage)

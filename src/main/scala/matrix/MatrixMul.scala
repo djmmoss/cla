@@ -1,5 +1,6 @@
-package cla
+package cla.matrix
 
+import cla.vector._
 import Chisel._
 
 class MatrixMul(val rowLength : Int, val colLength : Int, val bitWidth : Int, val hasStage : Boolean) extends Module {

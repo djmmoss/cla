@@ -1,5 +1,10 @@
 package cla
 
+import cla.primitives._
+import cla.utils._
+import cla.vector._
+import cla.matrix._
+
 import Chisel._
 
 
@@ -61,9 +66,9 @@ object Top {
                 chiselMainTest(theArgs, () => Module(new VectorDiv(vecLength, bitWidth, false))) {
                     c => new VectorDivTests(c)}
             case "VectorDot" =>
-                chiselMainTest(theArgs, () => Module(new VectorDot(vecLength, bitWidth, true))) {
-                    c => new VectorDotTests(c)}
                 chiselMainTest(theArgs, () => Module(new VectorDot(vecLength, bitWidth, false))) {
+                    c => new VectorDotTests(c)}
+                chiselMainTest(theArgs, () => Module(new VectorDot(vecLength, bitWidth, true))) {
                     c => new VectorDotTests(c)}
             case "VectorScalarMul" =>
                 chiselMainTest(theArgs, () => Module(new VectorScalarMul(vecLength, bitWidth, true))) {

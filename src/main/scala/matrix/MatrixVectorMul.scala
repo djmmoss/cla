@@ -1,5 +1,6 @@
-package cla
+package cla.matrix
 
+import cla.vector._
 import Chisel._
 import breeze.linalg._
 import breeze.numerics._

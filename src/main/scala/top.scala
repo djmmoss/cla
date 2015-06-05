@@ -4,6 +4,7 @@ import cla.primitives._
 import cla.utils._
 import cla.vector._
 import cla.matrix._
+import cla.types._
 
 import Chisel._
 
@@ -11,6 +12,7 @@ import Chisel._
 object Top {
     def main(args: Array[String]): Unit = {
         val bitWidth = 8
+        val fracWidth = 2
         val vecLength = 2
         val rowLength = 2
         val colLength = 2
@@ -127,6 +129,17 @@ object Top {
                     c => new MatrixPipeTests(c)}
                 chiselMainTest(theArgs, () => Module(new MatrixPipe(rowLength, colLength, bitWidth, false))) {
                     c => new MatrixPipeTests(c)}
+
+            // Fixed Point Tests
+            case "FixedAdd" =>
+                chiselMainTest(theArgs, () => Module(new FixedAdd(bitWidth, fracWidth))) {
+                    c => new FixedAddTests(c)}
+            case "FixedSub" =>
+                chiselMainTest(theArgs, () => Module(new FixedSub(bitWidth, fracWidth))) {
+                    c => new FixedSubTests(c)}
+            case "FixedNew" =>
+                chiselMainTest(theArgs, () => Module(new FixedNew(bitWidth, fracWidth))) {
+                    c => new FixedNewTests(c)}
         }
     }
 }

@@ -27,6 +27,17 @@ class Fixed extends Bits with Num[Fixed] {
         res
     }
 
+  override def fromInt(x : Int) : this.type = {
+    Fixed(x).asInstanceOf[this.type]
+  }
 
+  def toSInt(f : Fixed) : SInt = SInt(0)
+  def fromSInt(s : SInt) : Fixed = Fixed(0)
+
+  // Arithmetic Operators
+  def unary_-() : Fixed = Fixed(0) - this
+  def + (b : Fixed) : Fixed = fromSInt(toSInt(this) + toSInt(b))
+  def * (b : Fixed) : Fixed = fromSInt(toSInt(this) * toSInt(b))
+  def / (b : Fixed) : Fixed = fromSInt(toSInt(this) / toSInt(b))
 
 }

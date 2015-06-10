@@ -11,6 +11,7 @@ object Fixed {
 
     def apply(x : Int, width : Int, fracWidth : Int) : Fixed = apply(toFixed(x, fracWidth), width, fracWidth)
     def apply(x : Float, width : Int, fracWidth : Int) : Fixed = apply(toFixed(x, fracWidth), width, fracWidth)
+    def apply(x : Double, width : Int, fracWidth : Int) : Fixed = apply(toFixed(x, fracWidth), width, fracWidth)
     def apply(x : BigInt, width : Int, fracWidth : Int) : Fixed =  { 
       val res = Lit(x, width){Fixed()}
       res.fractionalWidth = fracWidth

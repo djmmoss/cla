@@ -140,6 +140,12 @@ object Top {
             case "FixedNew" =>
                 chiselMainTest(theArgs, () => Module(new FixedNew(bitWidth, fracWidth))) {
                     c => new FixedNewTests(c)}
+            case "FixedMultiLine" =>
+                chiselMainTest(theArgs, () => Module(new FixedMultiLine(bitWidth, fracWidth))) {
+                    c => new FixedMultiLineTests(c)}
+            case "FixedMult" =>
+                chiselMainTest(theArgs, () => Module(new FixedMult(bitWidth, fracWidth))) {
+                    c => new FixedMultTests(c)}
         }
     }
 }

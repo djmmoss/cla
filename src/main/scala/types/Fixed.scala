@@ -31,12 +31,18 @@ class Fixed(var fractionalWidth : Int = 0) extends Bits with Num[Fixed] {
     /* Fixed Factory Method */
     override def fromNode(n : Node): this.type = {
         val res = Fixed(OUTPUT).asTypeFor(n).asInstanceOf[this.type]
+        res.fractionalWidth = this.fractionalWidth
         res
     }
 
     override def fromInt(x : Int) : this.type = {
         Fixed(x, this.needWidth(), this.fractionalWidth).asInstanceOf[this.type]
     }
+
+  override def clone: this.type = {
+    val res = Fixed(this.dir, this.needWidth(), this.fractionalWidth).asInstanceOf[this.type];
+    res
+  }
 
     def checkAligned(b : Fixed) = if(this.fractionalWidth != b.fractionalWidth) ChiselError.error(this.fractionalWidth + " Fractional Bits does not match " + b.fractionalWidth)
 

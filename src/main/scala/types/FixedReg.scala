@@ -9,7 +9,7 @@ class FixedReg(val bitWidth : Int, val fracWidth : Int) extends Module {
         val out = Fixed(OUTPUT, bitWidth, fracWidth)
     }
     val myReg = Reg(init=Fixed(0.0, bitWidth, fracWidth))
-    myReg := io.a
+    myReg := io.a 
     io.out := myReg
 }
 

@@ -5,7 +5,7 @@ import Node._
 import ChiselError._
 
 object Fixed {
-
+    def toFixed(x : Double, fracWidth : Int) : BigInt = BigInt(scala.math.round(x*scala.math.pow(2, fracWidth)))
     def toFixed(x : Float, fracWidth : Int) : BigInt = BigInt(scala.math.round(x*scala.math.pow(2, fracWidth)))
     def toFixed(x : Int, fracWidth : Int) : BigInt = BigInt(scala.math.round(x*scala.math.pow(2, fracWidth)))
 
@@ -22,7 +22,6 @@ object Fixed {
         res.create(dir, width)
         res
     }
-
 }
 
 class Fixed(var fractionalWidth : Int = 0) extends Bits with Num[Fixed] {
@@ -39,7 +38,7 @@ class Fixed(var fractionalWidth : Int = 0) extends Bits with Num[Fixed] {
     }
 
     def checkAligned(b : Fixed) = if(this.fractionalWidth != b.fractionalWidth) ChiselError.error(this.fractionalWidth + " Fractional Bits does not match " + b.fractionalWidth)
-    
+
     def fromSInt(s : SInt) : Fixed = {
         val res = chiselCast(s){Fixed()}
         res.fractionalWidth = fractionalWidth
@@ -47,10 +46,25 @@ class Fixed(var fractionalWidth : Int = 0) extends Bits with Num[Fixed] {
     }
 
     // Order Operators
-    def > (b : Fixed) : Bool = this.toSInt > b.toSInt
-    def < (b : Fixed) : Bool = this.toSInt < b.toSInt
-    def >= (b : Fixed) : Bool = this.toSInt >= b.toSInt
-    def <= (b : Fixed) : Bool = this.toSInt <= b.toSInt
+    def > (b : Fixed) : Bool = {
+        checkAligned(b)
+        this.toSInt > b.toSInt
+    }
+
+    def < (b : Fixed) : Bool = {
+        checkAligned(b)
+        this.toSInt < b.toSInt
+    }
+
+    def >= (b : Fixed) : Bool = {
+        checkAligned(b)
+        this.toSInt >= b.toSInt
+    }
+
+    def <= (b : Fixed) : Bool = {
+        checkAligned(b)
+        this.toSInt <= b.toSInt
+    }
 
     // Arithmetic Operators
     def unary_-() : Fixed = Fixed(0, this.needWidth(), this.fractionalWidth) - this
@@ -60,26 +74,25 @@ class Fixed(var fractionalWidth : Int = 0) extends Bits with Num[Fixed] {
         fromSInt(this.toSInt + b.toSInt)
     }
 
+    def - (b : Fixed) : Fixed = {
+        checkAligned(b)
+        fromSInt(this.toSInt - b.toSInt)
+    }
+
     def * (b : Fixed) : Fixed ={
         checkAligned(b)
         val temp = this.toSInt * b.toSInt
-        val res = temp + ((temp & SInt(1, this.fractionalWidth)<<UInt(this.fractionalWidth-1))<<UInt(1))
+        val res = temp + ((temp & UInt(1)<<UInt(this.fractionalWidth-1))<<UInt(1))
         fromSInt(res >> UInt(this.fractionalWidth))
     }
 
     def / (b : Fixed) : Fixed = {
         checkAligned(b)
-        fromSInt(this.toSInt / b.toSInt)
+        fromSInt((this.toSInt << UInt(this.fractionalWidth)) / b.toSInt)
     }
 
     def % (b : Fixed) : Fixed = {
         checkAligned(b)
         fromSInt(this.toSInt % b.toSInt)
     }
-
-    def - (b : Fixed) : Fixed = {
-        checkAligned(b)
-        fromSInt(this.toSInt - b.toSInt)
-    }
-
 }

@@ -3,16 +3,22 @@ package cla.types
 import Chisel._
 import cla.types._
 
-class FixedSub(val bitWidth : Int, val fracWidth : Int) extends Module {
+class FixedCompare(val bitWidth : Int, val fracWidth : Int) extends Module {
     val io = new Bundle {
         val a = Fixed(INPUT, bitWidth, fracWidth)
         val b = Fixed(INPUT, bitWidth, fracWidth)
-        val out = Fixed(OUTPUT, bitWidth, fracWidth)
+        val gt = Bool(OUTPUT)
+        val lt = Bool(OUTPUT)
+        val gte = Bool(OUTPUT)
+        val lte = Bool(OUTPUT)
     }
-    io.out := io.a - io.b
+    io.gt := io.a > io.b
+    io.lt := io.a < io.b
+    io.gte := io.a >= io.b
+    io.lte := io.a <= io.b
 }
 
-class FixedSubTests(c : FixedSub) extends Tester(c) {
+class FixedCompareTests(c : FixedCompare) extends Tester(c) {
     def toFixed(x : Double, fracWidth : Int) : BigInt = BigInt(scala.math.round(x*scala.math.pow(2, fracWidth)))
     def toFixed(x : Float, fracWidth : Int) : BigInt = BigInt(scala.math.round(x*scala.math.pow(2, fracWidth)))
     def toFixed(x : Int, fracWidth : Int) : BigInt = BigInt(scala.math.round(x*scala.math.pow(2, fracWidth)))
@@ -25,6 +31,9 @@ class FixedSubTests(c : FixedSub) extends Tester(c) {
         val fixedB = toFixed(inB, c.fracWidth)
         poke(c.io.a, fixedA)
         poke(c.io.b, fixedB)
-        expect(c.io.out, toFixed(inA - inB, c.fracWidth))
+        expect(c.io.gt, Bool(inA > inB).litValue())
+        expect(c.io.lt, Bool(inA < inB).litValue())
+        expect(c.io.gte, Bool(inA >= inB).litValue())
+        expect(c.io.lte, Bool(inA <= inB).litValue()) 
     }
 }

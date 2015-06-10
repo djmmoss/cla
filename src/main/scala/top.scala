@@ -11,8 +11,8 @@ import Chisel._
 
 object Top {
     def main(args: Array[String]): Unit = {
-        val bitWidth = 8
-        val fracWidth = 2
+        val bitWidth = 16
+        val fracWidth = 8
         val vecLength = 2
         val rowLength = 2
         val colLength = 2
@@ -146,6 +146,15 @@ object Top {
             case "FixedMult" =>
                 chiselMainTest(theArgs, () => Module(new FixedMult(bitWidth, fracWidth))) {
                     c => new FixedMultTests(c)}
+            case "FixedVec" =>
+                chiselMainTest(theArgs, () => Module(new FixedVec(vecLength, bitWidth, fracWidth))) {
+                    c => new FixedVecTests(c)}
+            case "FixedDiv" =>
+                chiselMainTest(theArgs, () => Module(new FixedDiv(bitWidth, fracWidth))) {
+                    c => new FixedDivTests(c)}
+            case "FixedCompare" =>
+                chiselMainTest(theArgs, () => Module(new FixedCompare(bitWidth, fracWidth))) {
+                    c => new FixedCompareTests(c)}
         }
     }
 }

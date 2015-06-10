@@ -3,15 +3,16 @@ package cla.types
 import Chisel._
 import cla.types._
 
-class FixedNew(val bitWidth : Int, val fracWidth : Int) extends Module {
+class FixedDiv(val bitWidth : Int, val fracWidth : Int) extends Module {
     val io = new Bundle {
         val a = Fixed(INPUT, bitWidth, fracWidth)
+        val b = Fixed(INPUT, bitWidth, fracWidth)
         val out = Fixed(OUTPUT, bitWidth, fracWidth)
     }
-    io.out := Fixed(0.5f, bitWidth, fracWidth) + io.a
+    io.out := io.a / io.b
 }
 
-class FixedNewTests(c : FixedNew) extends Tester(c) {
+class FixedDivTests(c : FixedDiv) extends Tester(c) {
     def toFixed(x : Double, fracWidth : Int) : BigInt = BigInt(scala.math.round(x*scala.math.pow(2, fracWidth)))
     def toFixed(x : Float, fracWidth : Int) : BigInt = BigInt(scala.math.round(x*scala.math.pow(2, fracWidth)))
     def toFixed(x : Int, fracWidth : Int) : BigInt = BigInt(scala.math.round(x*scala.math.pow(2, fracWidth)))
@@ -19,8 +20,11 @@ class FixedNewTests(c : FixedNew) extends Tester(c) {
 
     for (i <- 0 to 10) {
         val inA = r.nextInt(scala.math.pow(2, (c.bitWidth - c.fracWidth)/2).toInt) * r.nextFloat()
+        val inB = r.nextInt(scala.math.pow(2, (c.bitWidth - c.fracWidth)/2).toInt) * r.nextFloat()
         val fixedA = toFixed(inA, c.fracWidth)
+        val fixedB = toFixed(inB, c.fracWidth)
         poke(c.io.a, fixedA)
-        expect(c.io.out, toFixed(0.5 + inA, c.fracWidth))
+        poke(c.io.b, fixedB)
+        expect(c.io.out, toFixed(inA / inB, c.fracWidth))
     }
 }

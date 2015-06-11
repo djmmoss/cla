@@ -36,11 +36,11 @@ class Fixed(var fractionalWidth : Int = 0) extends Bits with Num[Fixed] {
     }
 
     override def fromInt(x : Int) : this.type = {
-        Fixed(x, this.needWidth(), this.fractionalWidth).asInstanceOf[this.type]
+        Fixed(x, this.getWidth(), this.fractionalWidth).asInstanceOf[this.type]
     }
 
   override def clone: this.type = {
-    val res = Fixed(this.dir, this.needWidth(), this.fractionalWidth).asInstanceOf[this.type];
+    val res = Fixed(this.dir, this.getWidth(), this.fractionalWidth).asInstanceOf[this.type];
     res
   }
 

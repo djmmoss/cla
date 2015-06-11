@@ -137,6 +137,9 @@ object Top {
             case "FixedReg" =>
                 chiselMainTest(theArgs, () => Module(new FixedReg(bitWidth, fracWidth))) {
                     c => new FixedRegTests(c)}
+            case "FixedMux" =>
+                chiselMainTest(theArgs, () => Module(new FixedMux(bitWidth, fracWidth))) {
+                    c => new FixedMuxTests(c)}
             case "FixedSub" =>
                 chiselMainTest(theArgs, () => Module(new FixedSub(bitWidth, fracWidth))) {
                     c => new FixedSubTests(c)}

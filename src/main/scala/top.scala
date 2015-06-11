@@ -149,6 +149,9 @@ object Top {
             case "FixedMult" =>
                 chiselMainTest(theArgs, () => Module(new FixedMult(bitWidth, fracWidth))) {
                     c => new FixedMultTests(c)}
+            case "FixedMultTrunc" =>
+                chiselMainTest(theArgs, () => Module(new FixedMultTrunc(bitWidth, fracWidth))) {
+                    c => new FixedMultTruncTests(c)}
             case "FixedVec" =>
                 chiselMainTest(theArgs, () => Module(new FixedVec(vecLength, bitWidth, fracWidth))) {
                     c => new FixedVecTests(c)}

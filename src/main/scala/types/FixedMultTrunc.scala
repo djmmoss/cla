@@ -3,16 +3,16 @@ package cla.types
 import Chisel._
 import cla.types._
 
-class FixedMult(val bitWidth : Int, val fracWidth : Int) extends Module {
+class FixedMultTrunc(val bitWidth : Int, val fracWidth : Int) extends Module {
     val io = new Bundle {
         val a = Fixed(INPUT, bitWidth, fracWidth)
         val b = Fixed(INPUT, bitWidth, fracWidth)
         val out = Fixed(OUTPUT, bitWidth, fracWidth)
     }
-    io.out := io.a *& io.b
+    io.out := io.a * io.b
 }
 
-class FixedMultTests(c : FixedMult) extends Tester(c) {
+class FixedMultTruncTests(c : FixedMultTrunc) extends Tester(c) {
     def toFixed(x : Double, fracWidth : Int) : BigInt = BigInt(scala.math.round(x*scala.math.pow(2, fracWidth)))
     def toFixed(x : Float, fracWidth : Int) : BigInt = BigInt(scala.math.round(x*scala.math.pow(2, fracWidth)))
     def toFixed(x : Int, fracWidth : Int) : BigInt = BigInt(scala.math.round(x*scala.math.pow(2, fracWidth)))

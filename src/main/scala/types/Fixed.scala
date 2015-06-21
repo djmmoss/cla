@@ -73,6 +73,10 @@ class Fixed(var fractionalWidth : Int = 0) extends Bits with Num[Fixed] {
         this.toSInt <= b.toSInt
     }
 
+    def >> (b : UInt) : Fixed = {
+        fromSInt(this.toSInt >> b)
+    }
+
     // Arithmetic Operators
     def unary_-() : Fixed = Fixed(0, this.needWidth(), this.fractionalWidth) - this
 

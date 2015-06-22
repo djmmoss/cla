@@ -4,19 +4,20 @@ import cla.utils._
 import cla.types._
 import Chisel._
 
-class Add(bitWidth : Int, hasStage : Boolean) extends Module {
+class Add(bitWidth : Int, hasStage : Boolean) extends Module with Primitives {
     val io = new Bundle {
         val a = UInt(INPUT, bitWidth)
         val b = UInt(INPUT, bitWidth)
         val res = UInt(OUTPUT, bitWidth)
     }
-    if (hasStage) {
-        val pipeReg = Module(new PipeReg(bitWidth, hasStage))
-        pipeReg.io.in := io.a + io.b
-        io.res := pipeReg.io.out
-    } else {
-        io.res := io.a + io.b
-    }
+    io.res := pipeline(io.a + io.b, hasStage)
+    //if (hasStage) {
+        //val pipeReg = Module(new PipeReg(bitWidth, hasStage))
+        //pipeReg.io.in := io.a + io.b
+        //io.res := pipeReg.io.out
+    //} else {
+        //io.res := io.a + io.b
+    //}
 }
 
 class AddTests(c: Add, bitWidth : Int,  hasStage : Boolean) extends Tester(c) {

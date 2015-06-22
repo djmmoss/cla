@@ -3,18 +3,15 @@ package cla.vector
 import cla.primitives._
 import Chisel._
 
-class VectorAdd(val vecLength : Int, val bitWidth : Int, val hasStage : Boolean) extends Module {
+class VectorAdd(val vecLength : Int, val bitWidth : Int, val hasStage : Boolean) extends Module with Primitives {
+    def VecAdd(a : Vec[UInt], b : Vec[UInt]) = (a, b).zipped.map((e1, e2) => pipeline(e1+e2, hasStage))
+
     val io = new Bundle {
         val a = Vec.fill(vecLength){UInt(INPUT, bitWidth)}
         val b = Vec.fill(vecLength){UInt(INPUT, bitWidth)}
         val res = Vec.fill(vecLength){UInt(OUTPUT, bitWidth)}
     }
-    val VecAdds = Vec.fill(vecLength){Module(new Add(bitWidth, hasStage)).io}
-    for (i <- 0 until vecLength) {
-        VecAdds(i).a := io.a(i)
-        VecAdds(i).b := io.b(i)
-        io.res(i) := VecAdds(i).res
-    }
+    io.res := VecAdd(io.a, io.b)
 }
 
 class VectorAddTests(c: VectorAdd) extends Tester(c) {
